@@ -6,14 +6,24 @@ interface StubType {
 	controllerStub: SignUpController
 	emailValidatorStub: EmailValidator
 }
-
-const factoryController = (): StubType => {
+const factoryEmailValidator = (): EmailValidator => {
 	class EmailValidatorStub implements EmailValidator {
 		isValid (email: string): boolean {
 			return true
 		}
 	}
-	const emailValidatorStub = new EmailValidatorStub()
+	return new EmailValidatorStub()
+}
+const factoryEmailValidatorWithError = (): EmailValidator => {
+	class EmailValidatorStub implements EmailValidator {
+		isValid (email: string): boolean {
+			throw new Error()
+		}
+	}
+	return new EmailValidatorStub()
+}
+const factoryController = (): StubType => {
+	const emailValidatorStub = factoryEmailValidator()
 	const controllerStub = new SignUpController(emailValidatorStub)
 	return {
 		controllerStub,
@@ -114,12 +124,7 @@ describe('SignUp Controller', () => {
 		expect(isValidSpy).toHaveBeenCalledWith('anmy_invalid@email.com')
 	})
 	test('Should return 500 if EmailValidator throws', () => {
-		class EmailValidatorStub implements EmailValidator {
-			isValid (email: string): boolean {
-				throw new Error()
-			}
-		}
-		const emailValidatorStub = new EmailValidatorStub()
+		const emailValidatorStub = factoryEmailValidatorWithError()
 		const controllerStub = new SignUpController(emailValidatorStub)
 		const httpRequest = {
             body: {

@@ -5,7 +5,6 @@ describe('SignUp Controller', () => {
         const controller = new SignUpController()
         const httpRequest = {
             body: {
-                name: 'any',
                 email: 'anmy@email.com',
                 password: 'anypass',
                 passwordConfirmation: 'any confirmation'
@@ -22,7 +21,6 @@ describe('SignUp Controller', () => {
         const httpRequest = {
             body: {
                 name: 'any',
-                email: 'anmy@email.com',
                 password: 'anypass',
                 passwordConfirmation: 'any confirmation'
             }
@@ -31,6 +29,6 @@ describe('SignUp Controller', () => {
         const httpResponse = controller.handle(httpRequest)
 
 		expect(httpResponse.statusCode).toBe(400)
-		expect(httpResponse.body).toEqual(new Error('Missing param: name'))
+		expect(httpResponse.body).toEqual(new Error('Missing param: email'))
     })
 })

@@ -85,19 +85,18 @@ describe('SignUp Controller', () => {
 		expect(httpResponse.body).toEqual(new MissingParamError('passwordConfirmation'))
 	})
 	test('Should return 400 if an invalid email provided', () => {
-		const factory = factoryController()
-		jest.spyOn(factory.emailValidatorStub,'isValid').mockReturnValueOnce(false)
+		const { emailValidatorStub, controllerStub } = factoryController()
+		jest.spyOn(emailValidatorStub,'isValid').mockReturnValueOnce(false)
         const httpRequest = {
             body: {
                 name: 'any',
-				email: 'anmy_invalid@email.com',
+				email: 'safdsasdf',
 				password: 'ahoy',
-				passwordConfirmation: 'any confirmation'
+				passwordConfirmation: 'ahoy'
             }
         }
 
-        const httpResponse = factory.controllerStub.handle(httpRequest)
-
+        const httpResponse = controllerStub.handle(httpRequest)
 		expect(httpResponse.statusCode).toBe(400)
 		expect(httpResponse.body).toEqual(new InvalidParamError('email'))
 	})
@@ -109,7 +108,7 @@ describe('SignUp Controller', () => {
                 name: 'any',
 				email: 'anmy_invalid@email.com',
 				password: 'ahoy',
-				passwordConfirmation: 'any confirmation'
+				passwordConfirmation: 'ahoy'
             }
 		}
 		factory.controllerStub.handle(httpRequest)
@@ -125,12 +124,27 @@ describe('SignUp Controller', () => {
                 name: 'any',
 				email: 'anmy_invalid@email.com',
 				password: 'ahoy',
-				passwordConfirmation: 'any confirmation'
+				passwordConfirmation: 'ahoy'
             }
         }
 
         const httpResponse = controllerStub.handle(httpRequest)
 		expect(httpResponse.statusCode).toBe(500)
 		expect(httpResponse.body).toEqual(new ServerError())
+	})
+	test('Should return 400 if password confirmation fails', () => {
+		const { controllerStub } = factoryController()
+		const httpRequest = {
+            body: {
+                name: 'any',
+				email: 'anmy_invalid@email.com',
+				password: 'ahoy',
+				passwordConfirmation: 'any confirmation'
+            }
+		}
+		const httpResponse = controllerStub.handle(httpRequest)
+
+		expect(httpResponse.statusCode).toBe(400)
+		expect(httpResponse.body).toEqual(new InvalidParamError('passwordConfirmation'))
 	})
 })

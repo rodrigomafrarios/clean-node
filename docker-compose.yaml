@@ -1,0 +1,26 @@
+version: "3"
+services:
+  mongo:
+    container_name: mongo-container
+    image: mongo:3
+    restart: always
+    volumes:
+      - ./data:/data/db
+    ports:
+      - "27017:27017"
+    #networks:
+    #  - app_network
+  #api:
+  #  container_name: api-container
+  #  image: node:12
+  #  working_dir: /usr/src/api
+  #  restart: always
+  #  command: bash -c "npm run debug"
+  #  volumes:
+  #    - ./dist:/usr/src/api
+  #  ports:
+  #    - "5000:5000"
+  #  networks:
+  #    - app_network
+#networks:
+#  app_network:

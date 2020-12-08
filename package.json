@@ -9,7 +9,10 @@
     "test:unit": "npm test -- --watch -c jest-unit-config.js",
     "test:integration": "npm test -- --watch -c jest-integration-config.js",
     "test:staged": "npm test -- --findRelatedTests",
-    "test:ci": "npm test -- --coverage"
+	"test:ci": "npm test -- --coverage",
+	"build": "sucrase ./src -d ./dist --transforms typescript,imports && tsc -p tsconfig-build.json",
+    "start": "node ./dist/server.js",
+    "docker": "docker-compose up --build"
   },
   "repository": {
     "type": "git",

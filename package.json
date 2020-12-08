@@ -9,8 +9,8 @@
     "test:unit": "npm test -- --watch -c jest-unit-config.js",
     "test:integration": "npm test -- --watch -c jest-integration-config.js",
     "test:staged": "npm test -- --findRelatedTests",
-	"test:ci": "npm test -- --coverage",
-	"build": "sucrase ./src -d ./dist --transforms typescript,imports && tsc -p tsconfig-build.json",
+    "test:ci": "npm test -- --coverage",
+    "build": "sucrase ./src -d ./dist --transforms typescript,imports && tsc -p tsconfig-build.json",
     "start": "node ./dist/server.js",
     "docker": "docker-compose up --build"
   },
@@ -28,6 +28,7 @@
   "devDependencies": {
     "@types/bcrypt": "^3.0.0",
     "@types/jest": "^26.0.15",
+    "@types/mongodb": "^3.6.2",
     "@types/node": "^14.14.10",
     "@types/validator": "^13.1.1",
     "@typescript-eslint/eslint-plugin": "^4.8.2",
@@ -46,6 +47,7 @@
   },
   "dependencies": {
     "bcrypt": "^5.0.0",
+    "mongodb": "^3.6.3",
     "node-pre-gyp": "^0.17.0",
     "validator": "^13.5.1"
   }

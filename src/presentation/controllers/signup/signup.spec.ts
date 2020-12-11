@@ -1,12 +1,13 @@
 import { SignUpController } from './signup'
 import { MissingParamError, InvalidParamError, ServerError } from '../../errors'
 import { EmailValidator, AddAccount, AddAccountModel, AccountModel, Validation } from './signup-protocols'
+import { badRequest, serverError, ok } from '../../helpers/http-helper'
 
 interface StubType {
 	controllerStub: SignUpController
 	emailValidatorStub: EmailValidator
 	addAccountStub: AddAccount
-	validatonStub: Validation
+	validationStub: Validation
 }
 const factoryEmailValidator = (): EmailValidator => {
 	class EmailValidatorStub implements EmailValidator {
@@ -32,8 +33,8 @@ const factoryAddAccount = (): AddAccount => {
 }
 const factoryValidation = (): Validation => {
 	class ValidationStub implements Validation {
-		validate (input: any): Error {
-			return new Error()
+		validate (input: any): any {
+			return null
 		}
 	}
 	return new ValidationStub()
@@ -41,13 +42,13 @@ const factoryValidation = (): Validation => {
 const factoryController = (): StubType => {
 	const emailValidatorStub = factoryEmailValidator()
 	const addAccountStub = factoryAddAccount()
-	const validatonStub = factoryValidation()
-	const controllerStub = new SignUpController(emailValidatorStub, addAccountStub, validatonStub)
+	const validationStub = factoryValidation()
+	const controllerStub = new SignUpController(emailValidatorStub, addAccountStub, validationStub)
 	return {
 		controllerStub,
 		emailValidatorStub,
 		addAccountStub,
-		validatonStub
+		validationStub
 	}
 }
 
@@ -65,7 +66,7 @@ describe('SignUp Controller', () => {
         const httpResponse = await factory.controllerStub.handle(httpRequest)
 
 		expect(httpResponse.statusCode).toBe(400)
-		expect(httpResponse.body).toEqual(new MissingParamError('name'))
+		expect(httpResponse).toEqual(badRequest(new MissingParamError('name')))
 	})
 	test('Should return 400 if no email provided', async () => {
 		const factory = factoryController()
@@ -80,7 +81,7 @@ describe('SignUp Controller', () => {
         const httpResponse = await factory.controllerStub.handle(httpRequest)
 
 		expect(httpResponse.statusCode).toBe(400)
-		expect(httpResponse.body).toEqual(new MissingParamError('email'))
+		expect(httpResponse).toEqual(badRequest(new MissingParamError('email')))
 	})
 	test('Should return 400 if no password provided', async () => {
         const factory = factoryController()
@@ -95,7 +96,7 @@ describe('SignUp Controller', () => {
         const httpResponse = await factory.controllerStub.handle(httpRequest)
 
 		expect(httpResponse.statusCode).toBe(400)
-		expect(httpResponse.body).toEqual(new MissingParamError('password'))
+		expect(httpResponse).toEqual(badRequest(new MissingParamError('password')))
 	})
 	test('Should return 400 if no confirmation provided', async () => {
         const factory = factoryController()
@@ -110,7 +111,7 @@ describe('SignUp Controller', () => {
         const httpResponse = await factory.controllerStub.handle(httpRequest)
 
 		expect(httpResponse.statusCode).toBe(400)
-		expect(httpResponse.body).toEqual(new MissingParamError('passwordConfirmation'))
+		expect(httpResponse).toEqual(badRequest(new MissingParamError('passwordConfirmation')))
 	})
 	test('Should return 400 if an invalid email provided', async () => {
 		const { emailValidatorStub, controllerStub } = factoryController()
@@ -126,7 +127,7 @@ describe('SignUp Controller', () => {
 
         const httpResponse = await controllerStub.handle(httpRequest)
 		expect(httpResponse.statusCode).toBe(400)
-		expect(httpResponse.body).toEqual(new InvalidParamError('email'))
+		expect(httpResponse).toEqual(badRequest(new InvalidParamError('email')))
 	})
 	test('Should call EmailValidator with correct email', async () => {
 		const factory = factoryController()
@@ -158,7 +159,7 @@ describe('SignUp Controller', () => {
 
         const httpResponse = await controllerStub.handle(httpRequest)
 		expect(httpResponse.statusCode).toBe(500)
-		expect(httpResponse.body).toEqual(new ServerError(''))
+		expect(httpResponse).toEqual(serverError(new ServerError('')))
 	})
 	test('Should return 400 if password confirmation fails', async () => {
 		const { controllerStub } = factoryController()
@@ -173,7 +174,7 @@ describe('SignUp Controller', () => {
 		const httpResponse = await controllerStub.handle(httpRequest)
 
 		expect(httpResponse.statusCode).toBe(400)
-		expect(httpResponse.body).toEqual(new InvalidParamError('passwordConfirmation'))
+		expect(httpResponse).toEqual(badRequest(new InvalidParamError('passwordConfirmation')))
 	})
 	test('Sould call AddAccount with correct values', async () => {
 		const { controllerStub, addAccountStub } = factoryController()
@@ -196,7 +197,7 @@ describe('SignUp Controller', () => {
 	test('Should return 500 if AddAccount throws', async () => {
 		const { addAccountStub, controllerStub } = factoryController()
 		jest.spyOn(addAccountStub, 'add').mockImplementationOnce(async () => {
-			return new Promise((resolve, reject) => reject(new Error()))
+			return new Promise((resolve, reject) => reject(serverError(new ServerError(''))))
 		})
 		const httpRequest = {
             body: {
@@ -209,7 +210,7 @@ describe('SignUp Controller', () => {
 
         const httpResponse = await controllerStub.handle(httpRequest)
 		expect(httpResponse.statusCode).toBe(500)
-		expect(httpResponse.body).toEqual(new ServerError(''))
+		expect(httpResponse).toEqual(serverError(new ServerError('')))
 	})
 	test('Should return 200 if valid data is provided', async () => {
 		const { controllerStub } = factoryController()
@@ -224,16 +225,16 @@ describe('SignUp Controller', () => {
 
         const httpResponse = await controllerStub.handle(httpRequest)
 		expect(httpResponse.statusCode).toBe(200)
-		expect(httpResponse.body).toEqual({
+		expect(httpResponse).toEqual(ok({
 			id: 'valid_id',
 			name: 'valid_name',
 			email: 'valid_mail@mail.com',
 			password: 'valid_password'
-		})
+		}))
 	})
 	test('Sould call Validaton with correct value', async () => {
-		const { controllerStub, validatonStub } = factoryController()
-		const validateSpy = jest.spyOn(validatonStub, 'validate')
+		const { controllerStub, validationStub } = factoryController()
+		const validateSpy = jest.spyOn(validationStub, 'validate')
 		const httpRequest = {
 			body: {
 				name: 'any_name',
@@ -244,5 +245,20 @@ describe('SignUp Controller', () => {
 		}
 		await controllerStub.handle(httpRequest)
 		expect(validateSpy).toHaveBeenCalledWith(httpRequest.body)
+	})
+	test('Should return 400 if Validation returns an error', async () => {
+		const { controllerStub, validationStub } = factoryController()
+		jest.spyOn(validationStub, 'validate').mockReturnValueOnce(new MissingParamError('any_field'))
+        const httpRequest = {
+            body: {
+                name: 'valid_name',
+				email: 'valid_mail@mail.com',
+				password: 'valid_password',
+				passwordConfirmation: 'valid_password'
+            }
+        }
+
+        const httpResponse = await controllerStub.handle(httpRequest)
+		expect(httpResponse).toEqual(badRequest(new MissingParamError('any_field')))
 	})
 })

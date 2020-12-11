@@ -1,22 +1,14 @@
 import { SignUpController } from './signup'
-import { MissingParamError, InvalidParamError, ServerError } from '../../errors'
-import { EmailValidator, AddAccount, AddAccountModel, AccountModel, Validation } from './signup-protocols'
+import { MissingParamError, ServerError } from '../../errors'
+import { AddAccount, AddAccountModel, AccountModel, Validation } from './signup-protocols'
 import { badRequest, serverError, ok } from '../../helpers/http-helper'
 
 interface StubType {
 	controllerStub: SignUpController
-	emailValidatorStub: EmailValidator
 	addAccountStub: AddAccount
 	validationStub: Validation
 }
-const factoryEmailValidator = (): EmailValidator => {
-	class EmailValidatorStub implements EmailValidator {
-		isValid (email: string): boolean {
-			return true
-		}
-	}
-	return new EmailValidatorStub()
-}
+
 const factoryAddAccount = (): AddAccount => {
 	class AddAccountStub implements AddAccount {
 		async add (account: AddAccountModel): Promise<AccountModel> {
@@ -40,67 +32,17 @@ const factoryValidation = (): Validation => {
 	return new ValidationStub()
 }
 const factoryController = (): StubType => {
-	const emailValidatorStub = factoryEmailValidator()
 	const addAccountStub = factoryAddAccount()
 	const validationStub = factoryValidation()
-	const controllerStub = new SignUpController(emailValidatorStub, addAccountStub, validationStub)
+	const controllerStub = new SignUpController(addAccountStub, validationStub)
 	return {
 		controllerStub,
-		emailValidatorStub,
 		addAccountStub,
 		validationStub
 	}
 }
 
 describe('SignUp Controller', () => {
-	test('Should return 400 if an invalid email provided', async () => {
-		const { emailValidatorStub, controllerStub } = factoryController()
-		jest.spyOn(emailValidatorStub,'isValid').mockReturnValueOnce(false)
-        const httpRequest = {
-            body: {
-                name: 'any',
-				email: 'safdsasdf',
-				password: 'ahoy',
-				passwordConfirmation: 'ahoy'
-            }
-        }
-
-        const httpResponse = await controllerStub.handle(httpRequest)
-		expect(httpResponse.statusCode).toBe(400)
-		expect(httpResponse).toEqual(badRequest(new InvalidParamError('email')))
-	})
-	test('Should call EmailValidator with correct email', async () => {
-		const factory = factoryController()
-		const isValidSpy = jest.spyOn(factory.emailValidatorStub,'isValid')
-        const httpRequest = {
-            body: {
-                name: 'any',
-				email: 'anmy_invalid@email.com',
-				password: 'ahoy',
-				passwordConfirmation: 'ahoy'
-            }
-		}
-		await factory.controllerStub.handle(httpRequest)
-		expect(isValidSpy).toHaveBeenCalledWith('anmy_invalid@email.com')
-	})
-	test('Should return 500 if EmailValidator throws', async () => {
-		const { emailValidatorStub, controllerStub } = factoryController()
-		jest.spyOn(emailValidatorStub, 'isValid').mockImplementationOnce(() => {
-			throw new Error()
-		})
-		const httpRequest = {
-            body: {
-                name: 'any',
-				email: 'anmy_invalid@email.com',
-				password: 'ahoy',
-				passwordConfirmation: 'ahoy'
-            }
-        }
-
-        const httpResponse = await controllerStub.handle(httpRequest)
-		expect(httpResponse.statusCode).toBe(500)
-		expect(httpResponse).toEqual(serverError(new ServerError('')))
-	})
 	test('Sould call AddAccount with correct values', async () => {
 		const { controllerStub, addAccountStub } = factoryController()
 		const addSpy = jest.spyOn(addAccountStub, 'add')

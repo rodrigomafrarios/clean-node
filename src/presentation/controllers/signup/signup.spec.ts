@@ -101,21 +101,6 @@ describe('SignUp Controller', () => {
 		expect(httpResponse.statusCode).toBe(500)
 		expect(httpResponse).toEqual(serverError(new ServerError('')))
 	})
-	test('Should return 400 if password confirmation fails', async () => {
-		const { controllerStub } = factoryController()
-		const httpRequest = {
-            body: {
-                name: 'any',
-				email: 'anmy_invalid@email.com',
-				password: 'ahoy',
-				passwordConfirmation: 'any confirmation'
-            }
-		}
-		const httpResponse = await controllerStub.handle(httpRequest)
-
-		expect(httpResponse.statusCode).toBe(400)
-		expect(httpResponse).toEqual(badRequest(new InvalidParamError('passwordConfirmation')))
-	})
 	test('Sould call AddAccount with correct values', async () => {
 		const { controllerStub, addAccountStub } = factoryController()
 		const addSpy = jest.spyOn(addAccountStub, 'add')

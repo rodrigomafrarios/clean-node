@@ -1,5 +1,8 @@
 import { AccountMongoRepository } from '../account-repository/account'
 import { MongoHelper } from '../helpers/mongo-helper'
+import Collection from 'mongodb'
+
+let collection: Collection
 
 describe('Account Mongo Repository', () => {
 	beforeAll(async () => {
@@ -9,20 +12,21 @@ describe('Account Mongo Repository', () => {
 		await MongoHelper.disconnect()
 	})
 	beforeEach(async () => {
-		const collection = await MongoHelper.getCollection('accounts')
+		collection = await MongoHelper.getCollection('accounts')
 		await collection.deleteMany({})
 	})
 	const makeSut = (): AccountMongoRepository => {
 		return new AccountMongoRepository()
 	}
 
-	test('Should return an account on success', async () => {
+	test('Should return an account on loadByEmail success', async () => {
 		const sut = makeSut()
-		const account = await sut.add({
+		await collection.insertOne({
 			name: 'any_name',
 			email: 'any_mail@mail.com',
 			password: 'any_password'
 		})
+		const account = await sut.loadByEmail('any_mail@mail.com')
 		expect(account).toBeTruthy()
 		expect(account.id).toBeTruthy()
 		expect(account.name).toBe('any_name')

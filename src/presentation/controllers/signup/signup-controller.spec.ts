@@ -1,13 +1,21 @@
 import { SignUpController } from './signup-controller'
 import { MissingParamError, ServerError } from '../../errors'
-import { AddAccount, AddAccountModel, AccountModel, Validation } from './signup-controller-protocols'
+import { AddAccount, AddAccountModel, AccountModel, Validation, Authentication, AuthenticationModel, HttpRequest } from './signup-controller-protocols'
 import { badRequest, serverError, ok } from '../../helpers/http/http-helper'
 
 interface StubType {
 	controllerStub: SignUpController
 	addAccountStub: AddAccount
 	validationStub: Validation
+	authenticationStub: Authentication
 }
+
+const makeFakeRequest = (): HttpRequest => ({
+	body: {
+		email: 'any_mail@mail.com',
+		password: 'any_password'
+	}
+})
 
 const factoryAddAccount = (): AddAccount => {
 	class AddAccountStub implements AddAccount {
@@ -31,14 +39,24 @@ const factoryValidation = (): Validation => {
 	}
 	return new ValidationStub()
 }
+const factoryAuthentication = (): Authentication => {
+	class AuthenticationStub implements Authentication {
+		async auth (authentication: AuthenticationModel): Promise<string> {
+			return new Promise(resolve => resolve('any_token'))
+		}
+	}
+	return new AuthenticationStub()
+}
 const factoryController = (): StubType => {
+	const authenticationStub = factoryAuthentication()
 	const addAccountStub = factoryAddAccount()
 	const validationStub = factoryValidation()
-	const controllerStub = new SignUpController(addAccountStub, validationStub)
+	const controllerStub = new SignUpController(addAccountStub, validationStub, authenticationStub)
 	return {
 		controllerStub,
 		addAccountStub,
-		validationStub
+		validationStub,
+		authenticationStub
 	}
 }
 
@@ -127,5 +145,11 @@ describe('SignUp Controller', () => {
 
         const httpResponse = await controllerStub.handle(httpRequest)
 		expect(httpResponse).toEqual(badRequest(new MissingParamError('any_field')))
+	})
+	test('Should call Authentication with correct values', async () => {
+		const { controllerStub, authenticationStub } = factoryController()
+		const authSpy = jest.spyOn(authenticationStub, 'auth')
+		await controllerStub.handle(makeFakeRequest())
+		expect(authSpy).toHaveBeenCalledWith({ email: 'any_mail@mail.com', password: 'any_password' })
 	})
 })

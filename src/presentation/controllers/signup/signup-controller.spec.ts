@@ -97,26 +97,6 @@ describe('SignUp Controller', () => {
 		expect(httpResponse.statusCode).toBe(500)
 		expect(httpResponse).toEqual(serverError(new ServerError('')))
 	})
-	test('Should return 200 if valid data is provided', async () => {
-		const { controllerStub } = factoryController()
-        const httpRequest = {
-            body: {
-                name: 'valid_name',
-				email: 'valid_mail@mail.com',
-				password: 'valid_password',
-				passwordConfirmation: 'valid_password'
-            }
-        }
-
-        const httpResponse = await controllerStub.handle(httpRequest)
-		expect(httpResponse.statusCode).toBe(200)
-		expect(httpResponse).toEqual(ok({
-			id: 'valid_id',
-			name: 'valid_name',
-			email: 'valid_mail@mail.com',
-			password: 'valid_password'
-		}))
-	})
 	test('Sould call Validaton with correct value', async () => {
 		const { controllerStub, validationStub } = factoryController()
 		const validateSpy = jest.spyOn(validationStub, 'validate')
@@ -157,5 +137,11 @@ describe('SignUp Controller', () => {
 		jest.spyOn(authenticationStub, 'auth').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
 		const httpResponse = await controllerStub.handle(makeFakeRequest())
 		expect(httpResponse).toEqual(serverError(new Error()))
+	})
+	test('Should return 200 if valid credentials are provided', async () => {
+		const { controllerStub } = factoryController()
+		const httpResponse = await controllerStub.handle(makeFakeRequest())
+		expect(httpResponse.statusCode).toBe(200)
+		expect(httpResponse).toEqual(ok({ accessToken: 'any_token' }))
 	})
 })

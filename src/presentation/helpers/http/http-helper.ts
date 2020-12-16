@@ -21,6 +21,12 @@ export const serverError = (error: Error): HttpResponse => {
 		body: new ServerError(error.stack)
 	}
 }
+export const forbidden = (error: Error): HttpResponse => {
+	return {
+		statusCode: 403,
+		body: error
+	}
+}
 export const ok = (data: any): HttpResponse => {
 	return {
 		statusCode: 200,

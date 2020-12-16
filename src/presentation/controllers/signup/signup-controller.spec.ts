@@ -1,7 +1,7 @@
 import { SignUpController } from './signup-controller'
-import { MissingParamError, ServerError } from '../../errors'
+import { EmailInUseError, MissingParamError, ServerError } from '../../errors'
 import { AddAccount, AddAccountModel, AccountModel, Validation, Authentication, AuthenticationModel, HttpRequest } from './signup-controller-protocols'
-import { badRequest, serverError, ok } from '../../helpers/http/http-helper'
+import { badRequest, serverError, ok, forbidden } from '../../helpers/http/http-helper'
 
 interface StubType {
 	controllerStub: SignUpController
@@ -143,5 +143,12 @@ describe('SignUp Controller', () => {
 		const httpResponse = await controllerStub.handle(makeFakeRequest())
 		expect(httpResponse.statusCode).toBe(200)
 		expect(httpResponse).toEqual(ok({ accessToken: 'any_token' }))
+	})
+	test('Should return 403 if AddAccount returns null', async () => {
+		const { controllerStub, addAccountStub } = factoryController()
+		jest.spyOn(addAccountStub, 'add').mockReturnValueOnce(new Promise(resolve => resolve(null)))
+		const httpResponse = await controllerStub.handle(makeFakeRequest())
+		expect(httpResponse.statusCode).toBe(403)
+		expect(httpResponse).toEqual(forbidden(new EmailInUseError()))
 	})
 })

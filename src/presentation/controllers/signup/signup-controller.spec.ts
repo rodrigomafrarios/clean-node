@@ -152,4 +152,10 @@ describe('SignUp Controller', () => {
 		await controllerStub.handle(makeFakeRequest())
 		expect(authSpy).toHaveBeenCalledWith({ email: 'any_mail@mail.com', password: 'any_password' })
 	})
+	test('Should return 500 if Authentication throws', async () => {
+		const { controllerStub, authenticationStub } = factoryController()
+		jest.spyOn(authenticationStub, 'auth').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
+		const httpResponse = await controllerStub.handle(makeFakeRequest())
+		expect(httpResponse).toEqual(serverError(new Error()))
+	})
 })

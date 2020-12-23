@@ -12,7 +12,10 @@
     "test:ci": "npm test -- --coverage",
     "build": "sucrase ./src -d ./dist --transforms typescript,imports && tsc -p tsconfig-build.json",
     "start": "sucrase-node src/main/server.ts",
-    "docker": "docker-compose up --build"
+    "debug": "node --inspect=0.0.0.0:9222 --nolazy dist/main/server.js",
+    "docker": "docker-compose up --build",
+    "up": "npm run build && docker-compose up -d",
+    "down": "docker-compose down"
   },
   "repository": {
     "type": "git",

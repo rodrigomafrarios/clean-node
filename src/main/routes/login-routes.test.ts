@@ -4,9 +4,8 @@ import { MongoHelper } from '../../infra/db/mongodb/helpers/mongo-helper'
 import { Collection } from 'mongodb'
 import { hash } from 'bcrypt'
 let collection: Collection
-
 beforeAll(async () => {
-	await MongoHelper.connect('mongodb://0.0.0.0:27017/jest')
+	await MongoHelper.connect(process.env.MONGO_URL)
 })
 afterAll(async () => {
 	await MongoHelper.disconnect()

@@ -1,5 +1,4 @@
 [![Build Status](https://travis-ci.com/rodrigomafrarios/clean-node.svg?branch=master)](https://travis-ci.com/rodrigomafrarios/clean-node)
-
 [![Coverage Status](https://coveralls.io/repos/github/rodrigomafrarios/clean-node/badge.svg)](https://coveralls.io/github/rodrigomafrarios/clean-node)
 
 Stack

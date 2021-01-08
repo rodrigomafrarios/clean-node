@@ -8,8 +8,6 @@ interface SutTypes {
 	addSurveyStub: AddSurvey
 }
 
-const date = new Date()
-
 const makeFakeRequest = (): HttpRequest => ({
 	body: {
 		question: 'any_question',
@@ -17,7 +15,7 @@ const makeFakeRequest = (): HttpRequest => ({
 			image: 'any_image',
 			answer: ''
 		}],
-		date: date
+		date: new Date()
 	}
 })
 
@@ -51,9 +49,9 @@ const makeSut = (): SutTypes => {
 
 describe('AddSurvey Controller', () => {
 	beforeAll(() => {
-		MockDate.set(date)
+		MockDate.set(new Date())
 	})
-	beforeAll(() => {
+	afterAll(() => {
 		MockDate.reset()
 	})
 	test('Should call validation with correct values', async () => {

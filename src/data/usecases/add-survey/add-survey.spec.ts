@@ -40,7 +40,7 @@ describe('DbAddSurvey Usecase', () => {
 	beforeAll(() => {
 		MockDate.set(date)
 	})
-	beforeAll(() => {
+	afterAll(() => {
 		MockDate.reset()
 	})
     test('Should call AddSurveyRepository with correct values', async () => {

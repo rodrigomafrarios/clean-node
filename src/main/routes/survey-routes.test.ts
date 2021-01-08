@@ -34,7 +34,8 @@ describe('POST /surveys', () => {
 			{
 				answer: 'answer2',
 				image: 'image2'
-			}]
+			}],
+			date: new Date()
 		})
 		.expect(403)
 	})
@@ -66,7 +67,8 @@ describe('POST /surveys', () => {
 			{
 				answer: 'answer2',
 				image: 'image2'
-			}]
+			}],
+			date: new Date()
 		})
 		.expect(204)
 	})

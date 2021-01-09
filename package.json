@@ -61,8 +61,12 @@
     "express": "^4.17.1",
     "fast-glob": "^3.2.4",
     "jsonwebtoken": "^8.5.1",
+    "module-alias": "^2.2.2",
     "mongodb": "^3.6.3",
     "node-pre-gyp": "^0.17.0",
     "validator": "^13.5.1"
+  },
+  "_moduleAliases": {
+	  "@": "dist"
   }
 }

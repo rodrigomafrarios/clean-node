@@ -79,4 +79,66 @@ describe('GET /surveys', () => {
 		.get('/api/surveys')
 		.expect(403)
 	})
+	test('Should return 204 on load surveys with valid accessToken', async () => {
+		const account = await accountCollection.insertOne({
+			name: 'Rodrigp',
+			email: 'rodrigomafrarios@gmail.com',
+			password: '123',
+			role: 'admin'
+		})
+		const id = account.ops[0]._id
+		const accessToken = sign({ id }, env.jwtSecret)
+		await accountCollection.updateOne({
+			_id: id
+		}, {
+			$set: {
+				accessToken
+			}
+		})
+		await request(app)
+		.get('/api/surveys')
+		.set('x-access-token', accessToken)
+		.expect(204)
+	})
+	test('Should return 200 on load surveys', async () => {
+		const account = await accountCollection.insertOne({
+			name: 'Rodrigp',
+			email: 'rodrigomafrarios@gmail.com',
+			password: '123',
+			role: 'admin'
+		})
+		const id = account.ops[0]._id
+		const accessToken = sign({ id }, env.jwtSecret)
+		await accountCollection.updateOne({
+			_id: id
+		}, {
+			$set: {
+				accessToken
+			}
+		})
+		await collection.insertMany([{
+			question: 'any_question',
+			answers: [{
+				image: 'any_image',
+				answer: 'any_answer'
+			}, {
+				answer: 'other_answer'
+			}],
+			date: new Date()
+		},
+		{
+			question: 'any1_question',
+			answers: [{
+				image: 'any1_image',
+				answer: 'any1_answer'
+			}, {
+				answer: 'other1_answer'
+			}],
+			date: new Date()
+		}])
+		await request(app)
+		.get('/api/surveys')
+		.set('x-access-token', accessToken)
+		.expect(200)
+	})
 })

@@ -5,9 +5,9 @@ import { LoadSurveysRepository } from '@/data/protocols/db/survey/load-surveys-r
 import { SurveyModel } from '@/domain/models/survey'
 
 export class SurveyMongoRepository implements AddSurveyRepository, LoadSurveysRepository {
-    async add (surveyData: AddSurveyModel): Promise<void> {
-        const collection = await MongoHelper.getCollection('surveys')
-        await collection.insertOne(surveyData)
+	async add (surveyData: AddSurveyModel): Promise<void> {
+		const collection = await MongoHelper.getCollection('surveys')
+		await collection.insertOne(surveyData)
 	}
 
 	async loadAll (): Promise<SurveyModel[]> {

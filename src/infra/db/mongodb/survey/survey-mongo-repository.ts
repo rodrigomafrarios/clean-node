@@ -14,12 +14,12 @@ export class SurveyMongoRepository implements AddSurveyRepository, LoadSurveysRe
 	async loadAll (): Promise<SurveyModel[]> {
 		const collection = await MongoHelper.getCollection('surveys')
 		const surveys = await collection.find().toArray()
-		return surveys
+		return MongoHelper.mapCollection(surveys)
 	}
 
 	async loadById (id: string): Promise<SurveyModel> {
 		const collection = await MongoHelper.getCollection('surveys')
 		const survey = await collection.findOne({ _id: id })
-		return survey
+		return survey && MongoHelper.map(survey)
 	}
 }

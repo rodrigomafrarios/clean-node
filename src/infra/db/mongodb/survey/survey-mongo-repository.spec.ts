@@ -15,6 +15,7 @@ describe('Account Mongo Repository', () => {
 		collection = await MongoHelper.getCollection('surveys')
 		await collection.deleteMany({})
 	})
+
 	const makeSut = (): SurveyMongoRepository => {
 		return new SurveyMongoRepository()
 	}
@@ -67,6 +68,24 @@ describe('Account Mongo Repository', () => {
 			const sut = makeSut()
 			const surveys = await sut.loadAll()
 			expect(surveys.length).toBe(0)
+		})
+	})
+	describe('loadById()', () => {
+		test('Should load survey by id on success', async () => {
+			const response = await collection.insertMany([{
+				question: 'any_question',
+				answers: [{
+					image: 'any_image',
+					answer: 'any_answer'
+				}, {
+					answer: 'other_answer'
+				}],
+				date: new Date()
+			}])
+			const id = response.ops[0]._id
+			const sut = makeSut()
+			const survey = await sut.loadById(id)
+			expect(survey).toBeTruthy()
 		})
 	})
 })

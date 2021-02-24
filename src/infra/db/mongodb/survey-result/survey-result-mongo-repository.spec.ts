@@ -34,6 +34,7 @@ const makeAccount = async (): Promise<AccountModel> => {
 	})
 	return response.ops[0]
 }
+
 describe('Account Mongo Repository', () => {
 	beforeAll(async () => {
 		await MongoHelper.connect(process.env.MONGO_URL)
@@ -66,6 +67,33 @@ describe('Account Mongo Repository', () => {
 			expect(surveyResult).toBeTruthy()
 			expect(surveyResult.id).toBeTruthy()
 			expect(surveyResult.answer).toBe(survey.answers[0].answer)
+		})
+		test('Should add a survey result if its not new', async () => {
+			const survey = await makeSurvey()
+			const account = await makeAccount()
+			await surveyResultCollection.insertOne({
+				surveyId: survey.id,
+				accountId: account.id,
+				answer: survey.answers[0].answer,
+				date: new Date()
+			})
+			const sut = makeSut()
+			await sut.save({
+				surveyId: survey.id,
+				accountId: account.id,
+				answer: survey.answers[1].answer,
+				date: new Date()
+			})
+
+			const surveyResult = await surveyResultCollection
+        .find({
+          surveyId: survey.id,
+          accountId: account.id
+        })
+        .toArray()
+
+			expect(surveyResult).toBeTruthy()
+			expect(surveyResult.length).toBe(1)
 		})
 	})
 })

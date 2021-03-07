@@ -6,7 +6,7 @@ import {
 	HttpRequest,
 	HttpResponse,
 	LoadSurveyById
-} from './save-survey-result-protocols.'
+} from '@/presentation/controllers/survey-result/save-survey-result/save-survey-result-protocols'
 
 export class SaveSurveyResultController implements Controller {
 	constructor (

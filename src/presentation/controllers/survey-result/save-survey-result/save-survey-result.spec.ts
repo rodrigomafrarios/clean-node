@@ -8,7 +8,7 @@ import {
 	SaveSurveyResult,
 	SaveSurveyResultModel,
 	SurveyResultModel
-} from './save-survey-result-protocols.'
+} from './save-survey-result-protocols'
 import MockDate from 'mockdate'
 
 type SutTypes = {

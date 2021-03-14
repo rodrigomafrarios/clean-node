@@ -12,9 +12,9 @@
     "test:ci": "npm test -- --coverage",
     "test:coveralls": "npm run test:ci && coveralls < coverage/lcov.info",
     "build": "sucrase ./src -d ./dist --transforms typescript,imports && tsc -p tsconfig-build.json",
-    "start": "sucrase-node src/main/server.ts",
-    "debug": "node --inspect=0.0.0.0:9222 --nolazy ./dist/main/server.js",
-    "docker": "docker-compose up --build",
+    "start": "sucrase-node ./src/main/server.ts",
+    "debug": "nodemon -L --watch ./src --inspect=0.0.0.0:9222 --nolazy ./dist/main/server.js",
+    "docker": "sudo npm install && npm run build && docker-compose up --build",
     "up": "npm run build && docker-compose up -d",
     "down": "docker-compose down"
   },
@@ -66,6 +66,7 @@
     "module-alias": "^2.2.2",
     "mongodb": "^3.6.3",
     "node-pre-gyp": "^0.17.0",
+    "nodemon": "^2.0.7",
     "swagger-ui-express": "^4.1.6",
     "validator": "^13.5.1"
   },

@@ -9,4 +9,6 @@ MongoHelper.connect(env.mongoUrl)
 		console.log(`Server running on http://localhost:${env.port}`)
 	})
 })
-.catch(console.error)
+.catch((e) => {
+	console.error(e)
+})

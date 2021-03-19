@@ -29,13 +29,29 @@ export const mockFakeSurveys = (): SurveyModel[] => {
 }
 
 export const mockFakeSurveyResultParams = (): SaveSurveyResultParams => ({
-	accountId: 'any-account-id',
 	surveyId: 'any-survey-id',
+	accountId: 'any-account-id',
 	answer: 'any-answer',
 	date: new Date()
 })
 
-export const mockFakeSurveyResultModel = (): SurveyResultModel => Object.assign({}, mockFakeSurveyResultParams(), { id: 'any-id' })
+export const mockFakeSurveyResultModel = (): SurveyResultModel => ({
+	surveyId: 'any_survey_id',
+	question: 'any_question',
+	answers: [{
+		image: 'any_image',
+		answer: 'any_answer',
+		count: 1,
+		percent: 58
+	},
+	{
+		image: 'other_image',
+		answer: 'other_answer',
+		count: 10,
+		percent: 50
+	}],
+	date: date
+})
 
 export const mockFakeSurveyData = (): AddSurveyParams => ({
     question: 'any_question',

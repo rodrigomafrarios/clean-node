@@ -2,7 +2,7 @@ import { SaveSurveyResultRepository } from '@/data/protocols/db/survey-result/sa
 import { SurveyResultModel } from '@/domain/models/survey-result'
 import { SaveSurveyResultParams } from '@/domain/usecases/survey-result/save-survey-result'
 import { MongoHelper } from '../helpers/mongo-helper'
-import { QueryBuilder } from '@/infra/db/mongodb/query-builder'
+import { QueryBuilder } from '@/infra/db/mongodb/helpers/query-builder'
 
 import { ObjectId } from 'mongodb'
 import round from 'mongo-round'
@@ -22,7 +22,6 @@ export class SurveyResultMongoRepository implements SaveSurveyResultRepository {
       upsert: true
     })
 		const surveyResult = await this.loadBySurveyId(data.surveyId, data.accountId)
-		console.log(surveyResult)
 		return surveyResult
 	}
 

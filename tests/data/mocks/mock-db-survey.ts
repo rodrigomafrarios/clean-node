@@ -5,6 +5,7 @@ import { LoadSurveyByIdRepository } from '@/data/protocols/db/survey/load-survey
 import { LoadSurveysRepository, SurveyModel } from '@/data/usecases/survey/load-surveys/db-load-surveys-protocols'
 import { SaveSurveyResultRepository } from '@/data/protocols/db/survey-result/save-survey-result-repository'
 import { SaveSurveyResultParams, SurveyResultModel } from '@/data/usecases/survey-result/save-survey-result/db-survey-result-protocols'
+import { LoadSurveyResultRepository } from '@/data/protocols/db/survey-result/load-survey-result-repository'
 
 export const mockAddSurveyRepository = (): AddSurveyRepository => {
 	class AddSurveyRepositoryStub implements AddSurveyRepository {
@@ -40,4 +41,13 @@ export const mockSaveSurveyResultRepository = (): SaveSurveyResultRepository => 
 			}
 	}
 	return new SaveSurveyResultRepositoryStub()
+}
+
+export const makeLoadSurveyResultRepository = (): LoadSurveyResultRepository => {
+	class LoadSurveyResultRepositoryStub implements LoadSurveyResultRepository {
+		async loadBySurveyId (surveyId: string): Promise<SurveyResultModel> {
+			return Promise.resolve(mockFakeSurveyResultModel())
+		}
+	}
+	return new LoadSurveyResultRepositoryStub()
 }

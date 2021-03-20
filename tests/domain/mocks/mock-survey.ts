@@ -2,15 +2,17 @@ import { SaveSurveyResultParams, SurveyResultModel } from '@/data/usecases/surve
 import { SurveyModel } from '@/domain/models/survey'
 import { AddSurveyParams } from '@/data/usecases/survey/add-survey/add-survey-protocols'
 
-const date = new Date()
-
 export const mockFakeSurvey = (): SurveyModel => {
 	return {
-		id: 'any_id',
+		id: 'any_survey_id',
 		question: 'any_question',
 		answers: [{
 			image: 'any_image',
-			answer: 'any-answer'
+			answer: 'any_answer'
+		},
+		{
+			image: 'other_image',
+			answer: 'other_answer'
 		}],
 		date: new Date()
 	}
@@ -41,16 +43,16 @@ export const mockFakeSurveyResultModel = (): SurveyResultModel => ({
 	answers: [{
 		image: 'any_image',
 		answer: 'any_answer',
-		count: 1,
-		percent: 58
+		count: 0,
+		percent: 0
 	},
 	{
 		image: 'other_image',
 		answer: 'other_answer',
-		count: 10,
-		percent: 50
+		count: 0,
+		percent: 0
 	}],
-	date: date
+	date: new Date()
 })
 
 export const mockFakeSurveyData = (): AddSurveyParams => ({
@@ -59,5 +61,5 @@ export const mockFakeSurveyData = (): AddSurveyParams => ({
         image: 'any_image',
         answer: 'any_answer'
 	}],
-	date: date
+	date: new Date()
 })

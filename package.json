@@ -1,6 +1,6 @@
 {
-  "name": "clean-node",
-  "version": "1.6.0",
+  "name": "clean-ts",
+  "version": "1.6.2",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -20,15 +20,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rodrigomafrarios/clean-node.git"
+    "url": "git+https://github.com/rodrigomafrarios/clean-ts.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/rodrigomafrarios/clean-node/issues"
+    "url": "https://github.com/rodrigomafrarios/clean-ts/issues"
   },
-  "homepage": "https://github.com/rodrigomafrarios/clean-node#readme",
+  "homepage": "https://github.com/rodrigomafrarios/clean-ts#readme",
   "devDependencies": {
     "@shelf/jest-mongodb": "^1.2.3",
     "@types/bcrypt": "^3.0.0",

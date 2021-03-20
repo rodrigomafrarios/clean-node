@@ -71,7 +71,6 @@ describe('PUT /surveys/:surveyId/results', () => {
 		const { id } = await makeFakeSurvey()
 		const accessToken = await makeAccessToken()
 		await request(app)
-		// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
 		.put(`/api/surveys/${id}/results`)
 		.set('x-access-token', accessToken)
 		.send({

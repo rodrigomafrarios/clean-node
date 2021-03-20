@@ -26,14 +26,16 @@ describe('Account Mongo Repository', () => {
 		return new AccountMongoRepository()
 	}
 
-	describe('add()', async () => {
-		const sut = makeSut()
-		const account = await sut.add(mockAddAccountParams())
-		expect(account).toBeTruthy()
-		expect(account.id).toBeTruthy()
-		expect(account.name).toBe('any_name')
-		expect(account.email).toBe('any_mail@mail.com')
-		expect(account.password).toBe('any_password')
+	describe('add()', () => {
+		test('Should add a account', async () => {
+			const sut = makeSut()
+			const account = await sut.add(mockAddAccountParams())
+			expect(account).toBeTruthy()
+			expect(account.id).toBeTruthy()
+			expect(account.name).toBe('any_name')
+			expect(account.email).toBe('any_mail@mail.com')
+			expect(account.password).toBe('any_password')
+		})
 	})
 	describe('loadByEmail()', () => {
 		test('Should return an account on loadByEmail success', async () => {

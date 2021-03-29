@@ -46,5 +46,24 @@ describe('Login - Graphql', () => {
       })
       expect(response.data.login.accessToken).toBeTruthy()
     })
+
+    test('Should return Unauthorized error on wrong credentials', async () => {
+      const password = await hash('123',12)
+      await collection.insertOne({
+        name: 'Rodrigp',
+        email: 'rodrigomafrarios@gmail.com',
+        password
+      })
+
+      const { query } = createTestClient({ apolloServer })
+      const response: any = await query(loginQuery, {
+        variables: {
+          email: 'rodrigomafrarios@gmail.com',
+          password: '12'
+        }
+      })
+      expect(response.data).toBeFalsy()
+      expect(response.errors[0].message).toBe('Unauthorized')
+    })
   })
 })

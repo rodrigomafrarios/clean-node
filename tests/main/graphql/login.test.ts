@@ -85,4 +85,28 @@ describe('Login - Graphql', () => {
       expect(response.errors[0].message).toBe('Invalid param: email')
     })
   })
+
+  describe('Signup Mutation', () => {
+    const signupMutation = gql`
+      mutation signUp ($name: String!, $email: String!, $password: String!, $passwordConfirmation: String!) {
+        signUp (name: $name, email: $email, password: $password, passwordConfirmation: $passwordConfirmation) {
+          accessToken,
+          name
+        }
+      }
+    `
+    test('Should return an Account on valid data', async () => {
+      const { mutate } = createTestClient({ apolloServer })
+      const response: any = await mutate(signupMutation, {
+        variables: {
+          name: 'Rodrigp',
+          email: 'rodrigomafrarios@gmail.com',
+          password: '123',
+          passwordConfirmation: '123'
+        }
+      })
+      expect(response.data.signUp.accessToken).toBeTruthy()
+      expect(response.data.signUp.name).toBe('Rodrigp')
+    })
+  })
 })

@@ -1,11 +1,27 @@
-[![Build Status](https://travis-ci.com/rodrigomafrarios/clean-node.svg?branch=master)](https://travis-ci.com/rodrigomafrarios/clean-node)
-[![Coverage Status](https://coveralls.io/repos/github/rodrigomafrarios/clean-node/badge.svg)](https://coveralls.io/github/rodrigomafrarios/clean-node)
+[![Build Status](https://travis-ci.com/rodrigomafrarios/clean-node.svg?branch=master)](https://travis-ci.com/rodrigomafrarios/clean-ts)
+[![Coverage Status](https://coveralls.io/repos/github/rodrigomafrarios/clean-node/badge.svg)](https://coveralls.io/github/rodrigomafrarios/clean-ts)
+
+A project with API examples of:
+- Login
+- Sign Up
+- Survey
 
 Stack
-* node.js + typescript
+* Typescript
+* Mongodb
 
-Padronização/Qualidade de código
-* eslint
-* git-commit-msg-linter (padrão de commit)
-* husky + lint-staged (roda o eslint para nos arquivos em stage)
-* jest (TDD)
+Design Patterns/Concepts
+* Composite
+* Factory
+* DDD
+* TDD
+* Clean architecture
+* Builder
+* SOLID
+
+Deploy/Tests
+* Eslint
+* Git-commit-msg-linter
+* Husky + Lint-staged
+* Jest
+* Docker
